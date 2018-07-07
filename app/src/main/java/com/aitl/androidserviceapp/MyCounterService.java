@@ -14,7 +14,7 @@ public class MyCounterService extends Service {
     String TAG = "MyCounterService";
 
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000;
+    private static final int LOCATION_INTERVAL = 30;
     private static final float LOCATION_DISTANCE = 10f;
 
 
@@ -148,7 +148,7 @@ public class MyCounterService extends Service {
     };
 
     private void initializeLocationManager() {
-        Log.e(TAG, "initializeLocationManager");
+        Log.d(TAG, "initializeLocationManager");
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }

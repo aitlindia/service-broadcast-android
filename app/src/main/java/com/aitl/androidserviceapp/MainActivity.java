@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String mBroadcastStringAction = "com.truiton.broadcast.string";
     public static final String mBroadcastIntegerAction = "com.truiton.broadcast.integer";
     public static final String mBroadcastArrayListAction = "com.truiton.broadcast.arraylist";
+
+
     private TextView mTextView;
     private IntentFilter mIntentFilter;
 
