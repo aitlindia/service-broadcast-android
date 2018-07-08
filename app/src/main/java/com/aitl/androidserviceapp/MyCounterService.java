@@ -1,13 +1,20 @@
 package com.aitl.androidserviceapp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.View;
 
 public class MyCounterService extends Service {
 
@@ -16,6 +23,10 @@ public class MyCounterService extends Service {
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 30;
     private static final float LOCATION_DISTANCE = 10f;
+
+    private int SIMPLE_NOTFICATION_ID = 1;
+
+    private NotificationManager mNotificationManager;
 
 
     boolean startstopflag = false;
@@ -35,6 +46,8 @@ public class MyCounterService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
         initializeLocationManager();
         try {
@@ -59,8 +72,9 @@ public class MyCounterService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         super.onStartCommand(intent, flags, startId);
+
+        showNotification();
 
         Log.d(TAG, "Activity on Start Command...");
 
@@ -90,6 +104,8 @@ public class MyCounterService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        mNotificationManager.cancelAll();
 
         startstopflag = false;
 
@@ -152,5 +168,22 @@ public class MyCounterService extends Service {
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
+    }
+
+    public void showNotification() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.ic_launcher_background);
+        mBuilder.setContentTitle("Notification Alert, Click Me!");
+        mBuilder.setContentText("Android Service is running!...");
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        mNotificationManager.notify(SIMPLE_NOTFICATION_ID, mBuilder.build());
     }
 }
